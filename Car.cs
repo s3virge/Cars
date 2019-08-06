@@ -8,10 +8,26 @@ namespace Cars
 {
     class Car
     {
+        private static byte leftWheels  = 91;
+        private static byte rightWheels = 93;
+        private static byte hood       = 178;
+        private static byte roof       = 219;
+        private static byte hatch      = 219;
+        private static byte leftWing   = 47; 
+        private static byte rightWing  = 92;
+        private static byte leftDoor   = 0;
+        private static byte rightDoor  = 0;
 
-        private string[,] shape = new string[4, 3] { { char.ConvertFromUtf32(8718), "1", "1" }, { "1", "1", "1" }, { "1", "1", "1" }, { "1", "1", "1" } };
-        private int[,] ushape = new int[4, 3] { { 91, 1, 93 }, { 741, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };
+        private const int shapeWeight = 7;
+        private const int shapeLength = 4;
 
+        private static byte[,] shape = new byte[shapeLength, shapeWeight] { 
+            { leftWing, hood, hood, hood, hood, hood, rightWing },
+            { leftWheels, roof, roof, roof, roof, roof, rightWheels }, 
+            { leftDoor, roof, roof, roof, roof, roof, rightDoor }, 
+            { leftWheels, hatch, hatch, hatch, hatch, hatch, rightWheels }
+        };
+        
         public Car()
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -19,33 +35,18 @@ namespace Cars
 
         public void draw()
         {
-            int i, j;
+            byte i, j;
             /* output each array element's value */
-            for (i = 0; i < 4; i++)
+            for (i = 0; i < shapeLength; i++)
             {
-                for (j = 0; j < 3; j++)
-                {
-                    Console.Write(shape[i, j]);
+                for (j = 0; j < shapeWeight; j++)
+                {                    
+                    char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i,j] })[0];
+                    Console.Write(c);
                 }
                 Console.WriteLine();
-            }
-            Console.ReadKey();
-        }
-
-        public void drawU()
-        {
-            int i, j;
-            /* output each array element's value */
-            for (i = 0; i < 4; i++)
-            {
-                for (j = 0; j < 3; j++)
-                {
-                    Console.Write(shape[i, j]);
-                }
-                Console.WriteLine();
-            }
-            Console.ReadKey();
-        }
+            }           
+        }       
 
         public void printSymbols()
         {
@@ -56,7 +57,9 @@ namespace Cars
 
             for (byte b = 0; b < byte.MaxValue; b++)
             {
+                //Returns an encoding for the specified code page
                 char c = Encoding.GetEncoding(437).GetChars(new byte[] { b })[0];
+
                 switch (b)
                 {
                     case 8: // Backspace

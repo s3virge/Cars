@@ -13,10 +13,6 @@ namespace Cars
             Car car = new Car();
             car.draw();
 
-            car.drawU();
-
-            car.printSymbols();
-
             Console.ReadKey();
         }
     }
