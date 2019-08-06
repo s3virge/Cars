@@ -6,14 +6,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cars {
-    class Program {
+namespace Cars
+{
+    class Program
+    {
         //static void Main(string[] args) {
         private static Car car;
         private static int left;
         private static int top;
 
-        public Program() {
+        public Program()
+        {
             int wndWidth = 40, wndHeight = 50;
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
@@ -25,11 +28,13 @@ namespace Cars {
         /* about tasks
          * https://metanit.com/sharp/tutorial/12.1.php 
          */
-        static void Main(string[] args) {
+        static void Main(string[] args)
+        {
 
             new Program();
 
-            Console.CancelKeyPress += (sender, e) => {
+            Console.CancelKeyPress += (sender, e) =>
+            {
                 Console.WriteLine("Exiting...");
                 Environment.Exit(0);
             };
@@ -49,38 +54,47 @@ namespace Cars {
             Task.WaitAll(tasks);
         }
 
-        private static void drawCar() {
-            for (; ; ) {
+        private static void drawCar()
+        {
+            for (; ; )
+            {
                 car.draw(left, top);
+                
                 Debug.WriteLine("drawCar() was launch");
             }
         }
 
-        private static void ProcessFiles() {
+        private static void ProcessFiles()
+        {
             var files = Enumerable.Range(1, 100).Select(n => "File" + n + ".txt");
 
             var taskBusy = new Task(BusyIndicator);
             taskBusy.Start();
 
-            foreach (var file in files) {
+            foreach (var file in files)
+            {
                 Thread.Sleep(1000);
                 Console.WriteLine("Procesing file {0}", file);
             }
         }
 
-        private static void BusyIndicator() {
+        private static void BusyIndicator()
+        {
             var busy = new ConsoleBusyIndicator();
             busy.UpdateProgress();
         }
 
-        private static void ReadKeys() {
+        private static void ReadKeys()
+        {
             ConsoleKeyInfo key = new ConsoleKeyInfo();
 
-            while (!Console.KeyAvailable && key.Key != ConsoleKey.Escape) {
+            while (!Console.KeyAvailable && key.Key != ConsoleKey.Escape)
+            {
 
                 key = Console.ReadKey(true);
 
-                switch (key.Key) {
+                switch (key.Key)
+                {
                     case ConsoleKey.UpArrow:
                         Console.WriteLine("UpArrow was pressed");
                         break;
@@ -100,7 +114,8 @@ namespace Cars {
                         break;
 
                     default:
-                        if (Console.CapsLock && Console.NumberLock) {
+                        if (Console.CapsLock && Console.NumberLock)
+                        {
                             Console.WriteLine(key.KeyChar);
                         }
                         break;
@@ -109,18 +124,22 @@ namespace Cars {
         }
     }
 
-    internal class ConsoleBusyIndicator {
+    internal class ConsoleBusyIndicator
+    {
         int _currentBusySymbol;
 
         public char[] BusySymbols { get; set; }
 
-        public ConsoleBusyIndicator() {
+        public ConsoleBusyIndicator()
+        {
             BusySymbols = new[] { '|', '/', '-', '\\' };
             Console.CursorVisible = false;
         }
 
-        public void UpdateProgress() {
-            while (true) {
+        public void UpdateProgress()
+        {
+            while (true)
+            {
                 Thread.Sleep(100);
                 var originalX = Console.CursorLeft;
                 var originalY = Console.CursorTop;
@@ -129,7 +148,8 @@ namespace Cars {
 
                 _currentBusySymbol++;
 
-                if (_currentBusySymbol == BusySymbols.Length) {
+                if (_currentBusySymbol == BusySymbols.Length)
+                {
                     _currentBusySymbol = 0;
                 }
 

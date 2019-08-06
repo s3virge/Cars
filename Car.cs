@@ -59,8 +59,14 @@ namespace Cars {
                 for (j = 0; j < width; j++) {
                     char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i, j] })[0];
                     Console.Write(c);
-                }                
-                Console.SetCursorPosition(left, ++top);
+                }
+                try
+                {
+                    Console.SetCursorPosition(left, ++top);
+                }
+                catch (ArgumentOutOfRangeException aor)
+                {
+                    Console.WriteLine(aor.Message);                }
             }
 
             Console.SetCursorPosition(10, 10);
