@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -8,19 +9,26 @@ using System.Threading.Tasks;
 namespace Cars {
     class Program {
         //static void Main(string[] args) {
-        //    Car car = new Car();
+        private static Car car;
+        private static int left;
+        private static int top;
 
-        //    Console.WriteLine("Press ESC to stop");
+        public Program() {
+            int wndWidth = 40, wndHeight = 50;
+            Console.SetWindowSize(wndWidth, wndHeight);
+            Console.SetBufferSize(wndWidth, wndHeight);
+            car = new Car();
+            left = 10;
+            top = Console.WindowHeight - car.getLength();
+        }
 
-        //    do {
-        //        while (!Console.KeyAvailable) {
-        //            car.draw();
-        //        }
-        //    }
-        //    while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-        //}
-
+        /* about tasks
+         * https://metanit.com/sharp/tutorial/12.1.php 
+         */
         static void Main(string[] args) {
+
+            new Program();
+
             Console.CancelKeyPress += (sender, e) => {
                 Console.WriteLine("Exiting...");
                 Environment.Exit(0);
@@ -29,13 +37,23 @@ namespace Cars {
             Console.WriteLine("Press ESC to Exit");
 
             var taskKeys = new Task(ReadKeys);
-            var taskProcessFiles = new Task(ProcessFiles);
+            var taskDraw = new Task(drawCar);
+
+            Task task = new Task(() => Console.WriteLine("Hello Task!"));
+            task.Start();
 
             taskKeys.Start();
-            taskProcessFiles.Start();
+            taskDraw.Start();
 
             var tasks = new[] { taskKeys };
             Task.WaitAll(tasks);
+        }
+
+        private static void drawCar() {
+            for (; ; ) {
+                car.draw(left, top);
+                Debug.WriteLine("drawCar() was launch");
+            }
         }
 
         private static void ProcessFiles() {
@@ -91,7 +109,7 @@ namespace Cars {
         }
     }
 
-    class ConsoleBusyIndicator {
+    internal class ConsoleBusyIndicator {
         int _currentBusySymbol;
 
         public char[] BusySymbols { get; set; }

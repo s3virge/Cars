@@ -16,10 +16,10 @@ namespace Cars {
         private static byte leftDoor = 0;
         private static byte rightDoor = 0;
 
-        private const int shapeWeight = 7;
+        private const int width = 7;
         private const int shapeLength = 4;
 
-        private static byte[,] shape = new byte[shapeLength, shapeWeight] {
+        private static byte[,] shape = new byte[shapeLength, width] {
             { leftWing, hood, hood, hood, hood, hood, rightWing },
             { leftWheels, roof, roof, roof, roof, roof, rightWheels },
             { leftDoor, roof, roof, roof, roof, roof, rightDoor },
@@ -30,16 +30,40 @@ namespace Cars {
             Console.OutputEncoding = Encoding.UTF8;
         }
 
-        public void draw() {
+        /// <summary>
+        /// get the weight of the car
+        /// </summary>
+        /// <returns></returns>
+        public int getWidth() {
+            return width;
+        }
+
+        /// <summary>
+        /// get the length of the car
+        /// </summary>
+        /// <returns></returns>
+        public int getLength() {
+            return shapeLength;
+        }
+
+        /// <summary>
+        /// drawing the car in desire position. 
+        /// 
+        /// </summary>
+        public void draw(int left = 0, int top = 0) {
+            Console.SetCursorPosition(left, top);
+
             byte i, j;
             /* output each array element's value */
             for (i = 0; i < shapeLength; i++) {
-                for (j = 0; j < shapeWeight; j++) {
+                for (j = 0; j < width; j++) {
                     char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i, j] })[0];
                     Console.Write(c);
-                }
-                Console.WriteLine();
+                }                
+                Console.SetCursorPosition(left, ++top);
             }
+
+            Console.SetCursorPosition(10, 10);
         }
 
         public void moveLeft() {
