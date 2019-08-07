@@ -16,6 +16,9 @@ namespace Cars {
         private static byte leftDoor = 0;
         private static byte rightDoor = 0;
 
+        private int left;
+        private int top;
+
         private const int width = 7;
         private const int shapeLength = 4;
 
@@ -26,8 +29,13 @@ namespace Cars {
             { leftWheels, hatch, hatch, hatch, hatch, hatch, rightWheels }
         };
 
-        public Car() {
+        public Car() : this(0, 0) {
+        }
+
+        public Car(int left, int top) {
             Console.OutputEncoding = Encoding.UTF8;
+            this.left = left;
+            this.top = top;
         }
 
         /// <summary>
@@ -45,12 +53,37 @@ namespace Cars {
         public int getLength() {
             return shapeLength;
         }
+        
+        /// <summary>
+        /// set the left position of the car
+        /// </summary>
+        /// <param name="l"></param>
+        public void setLeft(int l) {
+            left = l;
+        }
+
+        /// <summary>
+        /// set the top position of the car
+        /// </summary>
+        /// <param name="t"></param>
+        public void setTop(int t) {
+            top = t;
+        }
+
+        /// <summary>
+        /// set the left and top position of the car
+        /// </summary>        
+        public void setLeftTop(int left, int top) {
+            this.left = left;
+            this.top = top;
+        }
 
         /// <summary>
         /// drawing the car in desire position. 
         /// 
         /// </summary>
-        public void draw(int left = 0, int top = 0) {
+        public void draw() {
+            Console.Clear();
             Console.SetCursorPosition(left, top);
 
             byte i, j;
@@ -60,16 +93,15 @@ namespace Cars {
                     char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i, j] })[0];
                     Console.Write(c);
                 }
-                try
-                {
+                try {
                     Console.SetCursorPosition(left, ++top);
                 }
-                catch (ArgumentOutOfRangeException aor)
-                {
-                    Console.WriteLine(aor.Message);                }
+                catch (ArgumentOutOfRangeException aor) {
+                    Console.SetCursorPosition(0, 0);
+                    Console.WriteLine(aor.Message);
+                    break;
+                }
             }
-
-            Console.SetCursorPosition(10, 10);
         }
 
         public void moveLeft() {
