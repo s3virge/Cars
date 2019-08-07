@@ -82,9 +82,10 @@ namespace Cars {
         /// drawing the car in desire position. 
         /// 
         /// </summary>
-        public void draw() {
-            Console.Clear();
+        public void draw() {            
             Console.SetCursorPosition(left, top);
+
+            int elem = top;
 
             byte i, j;
             /* output each array element's value */
@@ -94,7 +95,7 @@ namespace Cars {
                     Console.Write(c);
                 }
                 try {
-                    Console.SetCursorPosition(left, ++top);
+                    Console.SetCursorPosition(left, ++elem);
                 }
                 catch (ArgumentOutOfRangeException aor) {
                     Console.SetCursorPosition(0, 0);

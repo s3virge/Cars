@@ -12,21 +12,23 @@ namespace Cars {
         private static Car car;
         private static int left;
         private static int top;
-
+        private int wndWidth, wndHeight;
         public Program() {
-            int wndWidth = 40, wndHeight = 50;
+            wndWidth = 40;
+            wndHeight = 50;
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
             car = new Car();
             left = 10;
             top = Console.WindowHeight - car.getLength() - 1;
+            Console.CursorVisible = false;
         }
 
         /* about tasks
          * https://metanit.com/sharp/tutorial/12.1.php 
          */
         static void Main(string[] args) {
-            new Program();
+            Program app = new Program();
 
             Console.CancelKeyPress += (sender, e) => {
                 Console.WriteLine("Exiting...");
@@ -38,15 +40,14 @@ namespace Cars {
             car.setLeftTop(left, top);
             car.draw();
 
-            var taskKeys = new Task(ReadKeys);
+            var taskKeys = new Task(app.ReadKeys);
             taskKeys.Start();
      
             var tasks = new[] { taskKeys };
             Task.WaitAll(tasks);
         }
-
                 
-        private static void ReadKeys() {
+        private void ReadKeys() {
             ConsoleKeyInfo key = new ConsoleKeyInfo();
 
             while (!Console.KeyAvailable && key.Key != ConsoleKey.Escape) {
@@ -56,21 +57,34 @@ namespace Cars {
                 switch (key.Key) {
                     case ConsoleKey.UpArrow:
                         //Console.WriteLine("UpArrow was pressed");
-                        car.setTop(top--);                        
+                        if (--top <= 0)
+                            top = 0;
+                        car.setTop(top);                        
                         break;
                     case ConsoleKey.DownArrow:
                         //Console.WriteLine("DownArrow was pressed");
-                        car.setTop(top++);
+                        int bottom = wndHeight - car.getLength();
+                        if (++top >= bottom){
+                            top = bottom;
+                        }
+                        car.setTop(top);
                         break;
 
                     case ConsoleKey.RightArrow:
                         //Console.WriteLine("RightArrow was pressed");
-                        car.setLeft(left++);
+                        int right = wndWidth - car.getWidth() - 1;
+                        if (++left >= right){
+                            left = right;
+                        }
+                        car.setLeft(left);
                         break;
 
                     case ConsoleKey.LeftArrow:
                         //Console.WriteLine("LeftArrow was pressed");
-                        car.setLeft(left--);
+                        if (--left <= 0) {
+                            left = 0;
+                        }
+                        car.setLeft(left);
                         break;
 
                     case ConsoleKey.Escape:
@@ -82,37 +96,8 @@ namespace Cars {
                         }
                         break;
                 }
-
-                car.draw();
-            }
-        }
-    }
-
-    internal class ConsoleBusyIndicator {
-        int _currentBusySymbol;
-
-        public char[] BusySymbols { get; set; }
-
-        public ConsoleBusyIndicator() {
-            BusySymbols = new[] { '|', '/', '-', '\\' };
-            Console.CursorVisible = false;
-        }
-
-        public void UpdateProgress() {
-            while (true) {
-                Thread.Sleep(100);
-                var originalX = Console.CursorLeft;
-                var originalY = Console.CursorTop;
-
-                Console.Write(BusySymbols[_currentBusySymbol]);
-
-                _currentBusySymbol++;
-
-                if (_currentBusySymbol == BusySymbols.Length) {
-                    _currentBusySymbol = 0;
-                }
-
-                Console.SetCursorPosition(originalX, originalY);
+                Console.Clear();
+                car.draw();                
             }
         }
     }
