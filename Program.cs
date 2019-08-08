@@ -19,7 +19,7 @@ namespace Cars {
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
             car = new Car();
-            left = 10;
+            left = wndWidth - car.getWidth() ;
             top = Console.WindowHeight - car.getLength() - 1;
             Console.CursorVisible = false;
         }
@@ -63,7 +63,7 @@ namespace Cars {
                         break;
                     case ConsoleKey.DownArrow:
                         //Console.WriteLine("DownArrow was pressed");
-                        int bottom = wndHeight - car.getLength();
+                        int bottom = wndHeight - car.getLength() - 1;
                         if (++top >= bottom){
                             top = bottom;
                         }
@@ -72,7 +72,7 @@ namespace Cars {
 
                     case ConsoleKey.RightArrow:
                         //Console.WriteLine("RightArrow was pressed");
-                        int right = wndWidth - car.getWidth() - 1;
+                        int right = wndWidth - car.getWidth();
                         if (++left >= right){
                             left = right;
                         }
