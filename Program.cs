@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Cars {
     class Program {
         //static void Main(string[] args) {
-        private static Car car;
+        private static ControlledCar car;
         private static int left;
         private static int top;
         private int wndWidth, wndHeight;
@@ -18,8 +18,8 @@ namespace Cars {
             wndHeight = 50;
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
-            car = new Car();
-            left = wndWidth - car.getWidth() ;
+            car = new ControlledCar();
+            left = wndWidth - car.getWidth();
             top = Console.WindowHeight - car.getLength() - 1;
             Console.CursorVisible = false;
         }
@@ -35,19 +35,42 @@ namespace Cars {
                 Environment.Exit(0);
             };
 
-            Console.WriteLine("Press ESC to Exit");
+            //Console.WriteLine("Press ESC to Exit");
 
             car.setLeftTop(left, top);
             car.draw();
 
-            var taskKeys = new Task(app.ReadKeys);
+            var taskKeys = new Task(app.controlledCarRoutine);
             taskKeys.Start();
-     
-            var tasks = new[] { taskKeys };
+
+            var taskOncomingCar = new Task(app.oncommingCarRoutine);
+            taskOncomingCar.Start();
+
+            var tasks = new[] { taskKeys, taskOncomingCar };
             Task.WaitAll(tasks);
         }
-                
-        private void ReadKeys() {
+
+        /// <summary>
+        /// method starts in separated process and draws the oncommint car in new position
+        /// </summary>
+        private void oncommingCarRoutine() {
+            //гонять машинку по кругу с разными смещениями по left
+            for(; ; ) {
+            moveDownOncomingCar();
+            }
+        }
+
+        private void moveDownOncomingCar() {
+            OncomingCar oncCar = new OncomingCar();
+            for (; oncCar.getTop() < wndHeight;) {
+                oncCar.moveDown();
+            }
+            Random rand = new Random();
+            int col = rand.Next(wndWidth - oncCar.getWidth());
+            oncCar.setLeftTop(col, 0);
+        }
+
+        private void controlledCarRoutine() {
             ConsoleKeyInfo key = new ConsoleKeyInfo();
 
             while (!Console.KeyAvailable && key.Key != ConsoleKey.Escape) {
@@ -59,12 +82,15 @@ namespace Cars {
                         //Console.WriteLine("UpArrow was pressed");
                         if (--top <= 0)
                             top = 0;
-                        car.setTop(top);                        
+                        car.setTop(top);
+                        //очистить фон за машинкой
+                        car.cleanBehind();
                         break;
+
                     case ConsoleKey.DownArrow:
                         //Console.WriteLine("DownArrow was pressed");
                         int bottom = wndHeight - car.getLength() - 1;
-                        if (++top >= bottom){
+                        if (++top >= bottom) {
                             top = bottom;
                         }
                         car.setTop(top);
@@ -73,7 +99,7 @@ namespace Cars {
                     case ConsoleKey.RightArrow:
                         //Console.WriteLine("RightArrow was pressed");
                         int right = wndWidth - car.getWidth();
-                        if (++left >= right){
+                        if (++left >= right) {
                             left = right;
                         }
                         car.setLeft(left);
@@ -96,8 +122,7 @@ namespace Cars {
                         }
                         break;
                 }
-                Console.Clear();
-                car.draw();                
+                car.draw();
             }
         }
     }
