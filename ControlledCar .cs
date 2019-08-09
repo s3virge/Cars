@@ -70,9 +70,34 @@ namespace Cars {
         //    Console.WriteLine();
         //}
 
-        public void cleanBehind() {
-            for (int l = left; l < width; l++) {
-                Console.SetCursorPosition(l, top);
+        public void wipeBehind() {
+            //wipe behinde the car from lelt to right
+            for (int l = 0; l < width; l++) {
+                Console.SetCursorPosition(left + l, top + length);
+                Console.Write(" ");
+            }
+        }
+
+        public void wipeBefore() {
+            //wipe befor the car from lelt to right
+            for (int pos = 0; pos < width; pos++) {
+                Console.SetCursorPosition(left + pos, top - 1);
+                Console.Write(" ");
+            }
+        }
+
+        public void wipeLeft() {
+            //wipe befor the car from lelt to right
+            for (int pos = 0; pos < length; pos++) {
+                Console.SetCursorPosition(left - 1 , top + pos);
+                Console.Write(" ");
+            }
+        }
+
+        public void wipeRight() {
+            //wipe befor the car from lelt to right
+            for (int pos = 0; pos < length; pos++) {
+                Console.SetCursorPosition(left + width, top + pos);
                 Console.Write(" ");
             }
         }

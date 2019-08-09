@@ -82,9 +82,8 @@ namespace Cars {
                         //Console.WriteLine("UpArrow was pressed");
                         if (--top <= 0)
                             top = 0;
-                        car.setTop(top);
-                        //очистить фон за машинкой
-                        car.cleanBehind();
+                        car.setTop(top);                        
+                        car.wipeBehind();
                         break;
 
                     case ConsoleKey.DownArrow:
@@ -94,6 +93,16 @@ namespace Cars {
                             top = bottom;
                         }
                         car.setTop(top);
+                        car.wipeBefore();
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+                        //Console.WriteLine("LeftArrow was pressed");
+                        if (--left <= 0) {
+                            left = 0;
+                        }
+                        car.setLeft(left);
+                        car.wipeRight();
                         break;
 
                     case ConsoleKey.RightArrow:
@@ -103,15 +112,8 @@ namespace Cars {
                             left = right;
                         }
                         car.setLeft(left);
-                        break;
-
-                    case ConsoleKey.LeftArrow:
-                        //Console.WriteLine("LeftArrow was pressed");
-                        if (--left <= 0) {
-                            left = 0;
-                        }
-                        car.setLeft(left);
-                        break;
+                        car.wipeLeft();
+                        break;                   
 
                     case ConsoleKey.Escape:
                         break;
