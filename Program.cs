@@ -21,7 +21,7 @@ namespace Cars {
             car = new ControlledCar();
             left = wndWidth - car.getWidth();
             top = Console.WindowHeight - car.getLength() - 1;
-            Console.CursorVisible = false;
+            Console.CursorVisible = true;
         }
 
         /* about tasks
@@ -55,19 +55,21 @@ namespace Cars {
         /// </summary>
         private void oncommingCarRoutine() {
             //гонять машинку по кругу с разными смещениями по left
-            for(; ; ) {
-            moveDownOncomingCar();
+            OncomingCar oncCar = new OncomingCar();
+
+            for (; ; ) {
+                moveDownOncomingCar(ref oncCar);
             }
         }
 
-        private void moveDownOncomingCar() {
-            OncomingCar oncCar = new OncomingCar();
-            for (; oncCar.getTop() < wndHeight;) {
-                oncCar.moveDown();
-            }
-            Random rand = new Random();
-            int col = rand.Next(wndWidth - oncCar.getWidth());
-            oncCar.setLeftTop(col, 0);
+        private void moveDownOncomingCar(ref OncomingCar oncomingCar) {
+            
+            int col = new Random().Next(wndWidth - oncomingCar.getWidth());
+            oncomingCar.setLeftTop(col, 0 - car.getLength()); //машинка за верхнем краем окна.
+
+            for (; oncomingCar.getTop() < wndHeight;) {
+                oncomingCar.moveDown();
+            }                        
         }
 
         private void controlledCarRoutine() {
@@ -82,7 +84,7 @@ namespace Cars {
                         //Console.WriteLine("UpArrow was pressed");
                         if (--top <= 0)
                             top = 0;
-                        car.setTop(top);                        
+                        car.setTop(top);
                         car.wipeBehind();
                         break;
 
@@ -113,7 +115,7 @@ namespace Cars {
                         }
                         car.setLeft(left);
                         car.wipeLeft();
-                        break;                   
+                        break;
 
                     case ConsoleKey.Escape:
                         break;
