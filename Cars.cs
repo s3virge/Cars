@@ -17,14 +17,29 @@ namespace Cars {
         protected static byte leftDoor = 0;
         protected static byte rightDoor = 0;
 
+        private int speed;
+        public int Speed {
+            get {
+                return speed;
+            }
+
+            set {
+                if (value > 10)
+                    speed = value;
+                else 
+                    speed = 10;                
+            }
+        }
+
         //all cars has the same size
         protected const int width = 7;
         protected const int length = 4;
 
-        public Cars(int left, int top) {
+        public Cars(int left, int top, int speed = 200) {
             Console.OutputEncoding = Encoding.UTF8;
             this.left = left;
             this.top = top;
+            Speed = speed;
         }
 
         /// <summary>

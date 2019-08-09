@@ -29,10 +29,13 @@ namespace Cars {
             if (top < 0)
                 topCursorPos = 0;
 
+            //wipe car when she touched the bootom 
+            if (top >= Console.WindowHeight) {               
+                return;
+            }                
+
             Console.SetCursorPosition(left, topCursorPos);
             //----------------------------------------------
-
-            int currentCarPiece = topCursorPos;
 
             //если спрайт машинки за верхним краем экрана
             //то сначала нужно нарисовать багажник машинки
@@ -55,17 +58,13 @@ namespace Cars {
                     Console.Write(c);
                 }
 
-                //try {
-                //устанавливем курсор в нажную позицию если спрайт машинки попадает в окно
-                if (shownCarPiece >= 0) {
-                    Console.SetCursorPosition(left, ++currentCarPiece);
+                try {
+                    Console.SetCursorPosition(left, ++topCursorPos);
                 }
-                //}
-                //catch (ArgumentOutOfRangeException aor) {
-                //    Console.SetCursorPosition(0, 0);
-                //    Console.WriteLine(aor.Message);
-                //    break;
-                //}
+                catch (ArgumentOutOfRangeException aorException) {
+                    Debug.WriteLine("draw() gen an exception - ", aorException.Message);
+                    break;
+                }
             }
         }
 
@@ -78,7 +77,7 @@ namespace Cars {
                 cleanBehind();
             }
 
-            Thread.Sleep(500);
+            Thread.Sleep(Speed);
         }
 
         /// <summary>

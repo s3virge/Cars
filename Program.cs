@@ -14,14 +14,14 @@ namespace Cars {
         private static int top;
         private int wndWidth, wndHeight;
         public Program() {
-            wndWidth = 40;
+            wndWidth = 20;
             wndHeight = 50;
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
             car = new ControlledCar();
             left = wndWidth - car.getWidth();
             top = Console.WindowHeight - car.getLength() - 1;
-            Console.CursorVisible = true;
+            Console.CursorVisible = false;
         }
 
         /* about tasks
@@ -46,7 +46,10 @@ namespace Cars {
             var taskOncomingCar = new Task(app.oncommingCarRoutine);
             taskOncomingCar.Start();
 
-            var tasks = new[] { taskKeys, taskOncomingCar };
+            //var taskOncomingCar2 = new Task(app.oncommingCarRoutine);
+            //taskOncomingCar2.Start();
+            
+            var tasks = new[] { taskKeys, taskOncomingCar};
             Task.WaitAll(tasks);
         }
 
@@ -58,6 +61,8 @@ namespace Cars {
             OncomingCar oncCar = new OncomingCar();
 
             for (; ; ) {
+                oncCar.Speed -= 10;
+                Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
                 moveDownOncomingCar(ref oncCar);
             }
         }
@@ -67,9 +72,11 @@ namespace Cars {
             int col = new Random().Next(wndWidth - oncomingCar.getWidth());
             oncomingCar.setLeftTop(col, 0 - car.getLength()); //машинка за верхнем краем окна.
 
-            for (; oncomingCar.getTop() < wndHeight;) {
+            for (; oncomingCar.getTop() < wndHeight;) {               
                 oncomingCar.moveDown();
-            }                        
+                Debug.WriteLine("moveDownOncomingCar(). oncomingCar.getTop() = {0}", oncomingCar.getTop());
+            }
+            Debug.WriteLine("loop is finished");
         }
 
         private void controlledCarRoutine() {
