@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 namespace Cars {
     class OncomingCar : Cars {
 
+        static object locker = new object();
+
         private static byte[,] shape = new byte[length, width] {
             { leftWheels, hatch, hatch, hatch, hatch, hatch, rightWheels },
             { leftDoor, roof, roof, roof, roof, roof, rightDoor },
@@ -30,9 +32,9 @@ namespace Cars {
                 topCursorPos = 0;
 
             //wipe car when she touched the bootom 
-            if (top >= Console.WindowHeight) {               
+            if (top >= Console.WindowHeight) {
                 return;
-            }                
+            }
 
             Console.SetCursorPosition(left, topCursorPos);
             //----------------------------------------------
@@ -52,7 +54,6 @@ namespace Cars {
             i = (byte)(length - shownCarPiece);
 
             for (; i < length; i++) {
-
                 for (j = 0; j < width; j++) {
                     char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i, j] })[0];
                     Console.Write(c);
@@ -71,10 +72,13 @@ namespace Cars {
         public void moveDown() {
             //не вытирать за машинкой пока она полностью не показалась.
             top++;
-            draw();
 
-            if (top > 0) {
-                cleanBehind();
+            lock (locker) {
+                draw();
+
+                if (top > 0) {
+                    cleanBehind();
+                }
             }
 
             Thread.Sleep(Speed);

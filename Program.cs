@@ -10,23 +10,33 @@ namespace Cars {
     class Program {
         //static void Main(string[] args) {
         private static ControlledCar car;
-        private static int left;
+        private static int controledCarLeft;
         private static int top;
         private int wndWidth, wndHeight;
+
+        static object locker = new object();
+
         public Program() {
-            wndWidth = 20;
-            wndHeight = 50;
+            wndWidth = 50;
+            wndHeight = 40;
+
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
-            car = new ControlledCar();
-            left = wndWidth - car.getWidth();
-            top = Console.WindowHeight - car.getLength() - 1;
             Console.CursorVisible = false;
+
+            car = new ControlledCar();
+
+            car.setLeft(wndWidth - car.getWidth());
+            car.setTop(Console.WindowHeight - car.getLength() - 1);
+
+            new Road();
         }
 
-        /* about tasks
-         * https://metanit.com/sharp/tutorial/12.1.php 
-         */
+
+        /// //////////////////////////////////////////
+        //todo controlled car must be on the road
+        /// //////////////////////////////////////////
+        
         static void Main(string[] args) {
             Program app = new Program();
 
@@ -36,8 +46,8 @@ namespace Cars {
             };
 
             //Console.WriteLine("Press ESC to Exit");
-
-            car.setLeftTop(left, top);
+            Road.draw();
+            
             car.draw();
 
             var taskKeys = new Task(app.controlledCarRoutine);
@@ -46,10 +56,7 @@ namespace Cars {
             var taskOncomingCar = new Task(app.oncommingCarRoutine);
             taskOncomingCar.Start();
 
-            //var taskOncomingCar2 = new Task(app.oncommingCarRoutine);
-            //taskOncomingCar2.Start();
-            
-            var tasks = new[] { taskKeys, taskOncomingCar};
+            var tasks = new[] { taskKeys, taskOncomingCar };
             Task.WaitAll(tasks);
         }
 
@@ -61,22 +68,23 @@ namespace Cars {
             OncomingCar oncCar = new OncomingCar();
 
             for (; ; ) {
-                oncCar.Speed -= 10;
-                Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
                 moveDownOncomingCar(ref oncCar);
+                oncCar.Speed -= 15;
+                Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
         }
 
         private void moveDownOncomingCar(ref OncomingCar oncomingCar) {
-            
-            int col = new Random().Next(wndWidth - oncomingCar.getWidth());
+            //на край дороги выезжать не будем, поэтому leftSide + 1
+            int col = new Random().Next(Road.leftSide + 1, Road.rightSide - oncomingCar.getWidth() + 1);
+
             oncomingCar.setLeftTop(col, 0 - car.getLength()); //машинка за верхнем краем окна.
 
-            for (; oncomingCar.getTop() < wndHeight;) {               
+            for (; oncomingCar.getTop() < wndHeight;) {
                 oncomingCar.moveDown();
                 Debug.WriteLine("moveDownOncomingCar(). oncomingCar.getTop() = {0}", oncomingCar.getTop());
             }
-            Debug.WriteLine("loop is finished");
+            Debug.WriteLine("moveDownOncomingCar() - loop is finished.");
         }
 
         private void controlledCarRoutine() {
@@ -86,54 +94,58 @@ namespace Cars {
 
                 key = Console.ReadKey(true);
 
-                switch (key.Key) {
-                    case ConsoleKey.UpArrow:
-                        //Console.WriteLine("UpArrow was pressed");
-                        if (--top <= 0)
-                            top = 0;
-                        car.setTop(top);
-                        car.wipeBehind();
-                        break;
+                lock (locker) {
+                    switch (key.Key) {
 
-                    case ConsoleKey.DownArrow:
-                        //Console.WriteLine("DownArrow was pressed");
-                        int bottom = wndHeight - car.getLength() - 1;
-                        if (++top >= bottom) {
-                            top = bottom;
-                        }
-                        car.setTop(top);
-                        car.wipeBefore();
-                        break;
+                        case ConsoleKey.UpArrow:
+                            //Console.WriteLine("UpArrow was pressed");
+                            if (--top <= 0)
+                                top = 0;
+                            car.setTop(top);
+                            car.wipeBehind();
+                            break;
 
-                    case ConsoleKey.LeftArrow:
-                        //Console.WriteLine("LeftArrow was pressed");
-                        if (--left <= 0) {
-                            left = 0;
-                        }
-                        car.setLeft(left);
-                        car.wipeRight();
-                        break;
+                        case ConsoleKey.DownArrow:
+                            //Console.WriteLine("DownArrow was pressed");
+                            int bottom = wndHeight - car.getLength() - 1;
+                            if (++top >= bottom) {
+                                top = bottom;
+                            }
+                            car.setTop(top);
+                            car.wipeBefore();
+                            break;
 
-                    case ConsoleKey.RightArrow:
-                        //Console.WriteLine("RightArrow was pressed");
-                        int right = wndWidth - car.getWidth();
-                        if (++left >= right) {
-                            left = right;
-                        }
-                        car.setLeft(left);
-                        car.wipeLeft();
-                        break;
+                        case ConsoleKey.LeftArrow:
+                            //Console.WriteLine("LeftArrow was pressed");
+                            if (--controledCarLeft <= 0) {
+                                controledCarLeft = 0;
+                            }
+                            car.setLeft(controledCarLeft);
+                            car.wipeRight();
+                            break;
 
-                    case ConsoleKey.Escape:
-                        break;
+                        case ConsoleKey.RightArrow:
+                            //Console.WriteLine("RightArrow was pressed");
+                            int right = wndWidth - car.getWidth();
+                            if (++controledCarLeft >= right) {
+                                controledCarLeft = right;
+                            }
+                            car.setLeft(controledCarLeft);
+                            car.wipeLeft();
+                            break;
 
-                    default:
-                        if (Console.CapsLock && Console.NumberLock) {
-                            Console.WriteLine(key.KeyChar);
-                        }
-                        break;
+                        case ConsoleKey.Escape:
+                            break;
+                            
+                        default:
+                            if (Console.CapsLock && Console.NumberLock) {
+                                Console.WriteLine(key.KeyChar);
+                            }
+                            break;
+                    }
+
+                    car.draw();
                 }
-                car.draw();
             }
         }
     }
