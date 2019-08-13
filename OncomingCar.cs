@@ -40,8 +40,7 @@ namespace Cars {
             //----------------------------------------------
 
             //если спрайт машинки за верхним краем экрана
-            //то сначала нужно нарисовать багажник машинки
-            //вычислить сколько частей корпуса машинки уже показалось из-за верхнего края окна
+            //то вычислить сколько частей корпуса машинки уже показалось из-за верхнего края окна
             int shownCarPiece = length;
             if (top < 0)
                 shownCarPiece = top + length;
@@ -92,14 +91,6 @@ namespace Cars {
                 Console.SetCursorPosition(left + el, top - 1);
                 Console.Write(" ");
             }
-        }
-
-        public int getLeft() {
-            return left;
-        }
-
-        public int getTop() {
-            return top;
         }
     }
 }

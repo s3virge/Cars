@@ -36,15 +36,14 @@ namespace Cars {
         protected const int width = 7;
         protected const int length = 4;
 
-        public Cars(int left, int top, int speed = 200) {
-            Console.OutputEncoding = Encoding.UTF8;
+        public Cars(int left, int top, int speed = 200) {            
             this.left = left;
             this.top = top;
             Speed = speed;
         }
 
         /// <summary>
-        /// get the weight of the car
+        /// get the width of the car
         /// </summary>
         /// <returns></returns>
         public int getWidth() {

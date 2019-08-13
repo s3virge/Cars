@@ -18,6 +18,8 @@ namespace Cars {
             wndWidth = 50;
             wndHeight = 40;
 
+            Console.OutputEncoding = Encoding.UTF8;
+
             new Road();
 
             Console.SetWindowSize(wndWidth, wndHeight);
