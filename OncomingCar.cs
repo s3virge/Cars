@@ -19,10 +19,12 @@ namespace Cars {
         };
 
         public OncomingCar() : base(0, 0 - length) {
+            color = ConsoleColor.Yellow;
         }
 
         public override void draw() {
 
+            Console.ForegroundColor = color;
             //car draws from top to bootom
 
             int topCursorPos = top;

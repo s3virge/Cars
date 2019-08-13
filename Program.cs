@@ -67,14 +67,32 @@ namespace Cars {
 
             for (; ; ) {
                 if (!moveDownOncomingCar(ref oncCar)) {
-                    Console.Beep();
-                    Console.SetCursorPosition(7, 20);
-                    Console.WriteLine("Game over.");
+                    PrintMsg("Game over");
                     return;
                 }
                 oncCar.Speed -= 15;
                 Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
+        }
+
+        private static void PrintMsg(string msg) {
+            Console.Beep();
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            int leftOffset = 5, topOffset = 19;
+
+            //paint background for message
+            for (int r = 0; r < 3; r++) {
+                for (int c = 0; c < msg.Length + 2; c++) {
+                    Console.SetCursorPosition(c + leftOffset, r + topOffset);
+                    Console.Write(' ');
+                }
+            }
+            Console.SetCursorPosition(leftOffset + 1, topOffset + 1);
+            Console.WriteLine(msg);
+
+            Console.BackgroundColor = ConsoleColor.Black;
         }
 
         private bool moveDownOncomingCar(ref OncomingCar oncomingCar) {
@@ -103,20 +121,20 @@ namespace Cars {
             int contCarLeft = controlCar.getLeft();
             int contCarTop = controlCar.getTop();
 
-            int leftDiference = onCarLeft - contCarLeft;
+            int leftDifference = onCarLeft - contCarLeft;
 
-            if (leftDiference < 0)
-                leftDiference = -(leftDiference);
+            if (leftDifference < 0)
+                leftDifference = -(leftDifference);
 
-            int topDiference = onCarTop - contCarTop;
+            int topDifference = onCarTop - contCarTop;
 
-            if (topDiference < 0)
-                topDiference = -(topDiference);
+            if (topDifference < 0)
+                topDifference = -(topDifference);
             
             int carWidth = controlCar.getWidth();
             int carLength = controlCar.getLength();
 
-            if (leftDiference <= carWidth && topDiference <= carLength) {
+            if (leftDifference < carWidth && topDifference <= carLength) {
                 Debug.WriteLine("Cars were crushed");
                 return true;
             }            

@@ -6,6 +6,7 @@ namespace Cars {
         //where the cars will draws
         protected int left;
         protected int top;
+        protected ConsoleColor color;
 
         protected static byte leftWheels = 91;
         protected static byte rightWheels = 93;
@@ -16,7 +17,7 @@ namespace Cars {
         protected static byte rightWing = 92;
         protected static byte leftDoor = 0;
         protected static byte rightDoor = 0;
-
+               
         private int speed;
         public int Speed {
             get {
@@ -39,8 +40,13 @@ namespace Cars {
         public Cars(int left, int top) {            
             this.left = left;
             this.top = top;
-            Speed = 200;
+            Speed = 200;            
         }
+
+        public void setColor(ConsoleColor color) {
+            this.color = color;
+        }
+
 
         /// <summary>
         /// get the width of the car

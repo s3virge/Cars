@@ -15,10 +15,12 @@ namespace Cars {
         };
 
         public ControlledCar() : base(0, 0) {
+            color = ConsoleColor.DarkGreen;
         }
 
         public override void draw() {
             Console.SetCursorPosition(left, top);
+            Console.ForegroundColor = color;
 
             int elem = top;
 
