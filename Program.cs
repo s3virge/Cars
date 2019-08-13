@@ -30,9 +30,8 @@ namespace Cars {
             car.setTop(Console.WindowHeight - car.getLength() - 1);            
         }
 
-
         /// //////////////////////////////////////////
-        //todo controlled car must be on the road
+        //todo controlled car must know about the road
         /// //////////////////////////////////////////
         
         static void Main(string[] args) {
@@ -87,7 +86,7 @@ namespace Cars {
 
         private void controlledCarRoutine() {
             ConsoleKeyInfo key = new ConsoleKeyInfo();
-            int carLeft, carTop;
+            int carLeft, carTop, bottomLimit, leftLimit, rightLimit;
 
             while (!Console.KeyAvailable && key.Key != ConsoleKey.Escape) {
 
@@ -107,10 +106,10 @@ namespace Cars {
 
                         case ConsoleKey.DownArrow:
                             //Console.WriteLine("DownArrow was pressed");
-                            int bottom = wndHeight - car.getLength() - 1;
+                            bottomLimit = wndHeight - car.getLength() - 1;
                             carTop = car.getTop();
-                            if (++carTop >= bottom) {
-                                carTop = bottom;
+                            if (++carTop >= bottomLimit) {
+                                carTop = bottomLimit;
                             }
                             car.setTop(carTop);
                             car.wipeBefore();
@@ -118,9 +117,10 @@ namespace Cars {
 
                         case ConsoleKey.LeftArrow:
                             //Console.WriteLine("LeftArrow was pressed");
+                            leftLimit = Road.leftSide + 1;
                             carLeft = car.getLeft();
-                            if (--carLeft <= 0) {
-                                carLeft = 0;
+                            if (--carLeft <= leftLimit) {
+                                carLeft = leftLimit;
                             }
                             car.setLeft(carLeft);
                             car.wipeRight();
@@ -128,10 +128,10 @@ namespace Cars {
 
                         case ConsoleKey.RightArrow:
                             //Console.WriteLine("RightArrow was pressed");
-                            int right = wndWidth - car.getWidth();
+                            rightLimit = Road.rightSide - car.getWidth();
                             carLeft = car.getLeft();
-                            if (++carLeft >= right) {
-                                carLeft = right;
+                            if (++carLeft >= rightLimit) {
+                                carLeft = rightLimit;
                             }
                             car.setLeft(carLeft);
                             car.wipeLeft();
