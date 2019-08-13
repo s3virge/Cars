@@ -67,6 +67,10 @@ namespace Cars {
             left = l;
         }
 
+        public int getLeft() {
+            return left;
+        }
+        
         /// <summary>
         /// set the top position of the car
         /// </summary>
