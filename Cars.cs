@@ -36,10 +36,10 @@ namespace Cars {
         protected const int width = 7;
         protected const int length = 4;
 
-        public Cars(int left, int top, int speed = 200) {            
+        public Cars(int left, int top) {            
             this.left = left;
             this.top = top;
-            Speed = speed;
+            Speed = 200;
         }
 
         /// <summary>
