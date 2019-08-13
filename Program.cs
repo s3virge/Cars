@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 namespace Cars {
     class Program {
         //static void Main(string[] args) {
-        private static ControlledCar car;
-        private static int controledCarLeft;
-        private static int top;
+        private static ControlledCar car;        
         private int wndWidth, wndHeight;
 
         static object locker = new object();
@@ -20,16 +18,16 @@ namespace Cars {
             wndWidth = 50;
             wndHeight = 40;
 
+            new Road();
+
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
             Console.CursorVisible = false;
 
             car = new ControlledCar();
 
-            car.setLeft(wndWidth - car.getWidth());
-            car.setTop(Console.WindowHeight - car.getLength() - 1);
-
-            new Road();
+            car.setLeft(Road.rightSide - car.getWidth());
+            car.setTop(Console.WindowHeight - car.getLength() - 1);            
         }
 
 
@@ -89,6 +87,7 @@ namespace Cars {
 
         private void controlledCarRoutine() {
             ConsoleKeyInfo key = new ConsoleKeyInfo();
+            int carLeft, carTop;
 
             while (!Console.KeyAvailable && key.Key != ConsoleKey.Escape) {
 
@@ -99,48 +98,46 @@ namespace Cars {
 
                         case ConsoleKey.UpArrow:
                             //Console.WriteLine("UpArrow was pressed");
-                            if (--top <= 0)
-                                top = 0;
-                            car.setTop(top);
+                            carTop = car.getTop();
+                            if (--carTop <= 0)
+                                carTop = 0;
+                            car.setTop(carTop);
                             car.wipeBehind();
                             break;
 
                         case ConsoleKey.DownArrow:
                             //Console.WriteLine("DownArrow was pressed");
                             int bottom = wndHeight - car.getLength() - 1;
-                            if (++top >= bottom) {
-                                top = bottom;
+                            carTop = car.getTop();
+                            if (++carTop >= bottom) {
+                                carTop = bottom;
                             }
-                            car.setTop(top);
+                            car.setTop(carTop);
                             car.wipeBefore();
                             break;
 
                         case ConsoleKey.LeftArrow:
                             //Console.WriteLine("LeftArrow was pressed");
-                            if (--controledCarLeft <= 0) {
-                                controledCarLeft = 0;
+                            carLeft = car.getLeft();
+                            if (--carLeft <= 0) {
+                                carLeft = 0;
                             }
-                            car.setLeft(controledCarLeft);
+                            car.setLeft(carLeft);
                             car.wipeRight();
                             break;
 
                         case ConsoleKey.RightArrow:
                             //Console.WriteLine("RightArrow was pressed");
                             int right = wndWidth - car.getWidth();
-                            if (++controledCarLeft >= right) {
-                                controledCarLeft = right;
+                            carLeft = car.getLeft();
+                            if (++carLeft >= right) {
+                                carLeft = right;
                             }
-                            car.setLeft(controledCarLeft);
+                            car.setLeft(carLeft);
                             car.wipeLeft();
                             break;
 
                         case ConsoleKey.Escape:
-                            break;
-                            
-                        default:
-                            if (Console.CapsLock && Console.NumberLock) {
-                                Console.WriteLine(key.KeyChar);
-                            }
                             break;
                     }
 

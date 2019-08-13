@@ -24,7 +24,7 @@ namespace Cars {
             }
 
             set {
-                int maxSpeed = 30;
+                int maxSpeed = 35;
                 if (value > maxSpeed)
                     speed = value;
                 else 
