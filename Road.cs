@@ -10,27 +10,36 @@ namespace Cars {
         /// Road width 
         /// </summary>
         private int width { get; set; }
-        
+
         /// <summary>
         /// Left side position of thе road
         /// </summary>
-        public static int leftSide { get; set; }
-        
+        public int leftSide { get; set; }
+
         /// <summary>
         /// Right side of the road. Dpends from road width.
         /// </summary>
-        public static int rightSide { get; set; }
+        int right_Side;
+        public int rightSide {
+            get {
+                right_Side = leftSide + width;
+                return right_Side;
+            }
+            set {
+                right_Side = value;
+            }
+        }
 
-        public Road(int width = 20) {
-            this.width = width;
+        public Road(int roadWidth = 21) {
+            width = roadWidth;
             leftSide = 0;
-            rightSide = leftSide + this.width;            
+            rightSide = leftSide + width;
         }
 
         /// <summary>
         /// draws the road
         /// </summary>
-        public static void draw() {
+        public void draw() {
             char roadBorder = '|';
             int consoleWndHight = Console.WindowHeight;
             for (int h = 0; h < consoleWndHight; h++) {

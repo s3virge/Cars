@@ -11,23 +11,26 @@ namespace Cars {
         //static void Main(string[] args) {
         private static ControlledCar car;        
         private int wndWidth, wndHeight;
+        private static int score;
+        private static Road road;
 
         static object locker = new object();
 
         public Program() {
             wndWidth = 50;
             wndHeight = 40;
+            score = 0;
 
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
             Console.OutputEncoding = Encoding.UTF8;
             Console.CursorVisible = false;
 
-            new Road();
+            road = new Road();
 
             car = new ControlledCar();
 
-            car.setLeft(Road.rightSide - car.getWidth());
+            car.setLeft(road.rightSide - car.getWidth());
             car.setTop(Console.WindowHeight - car.getLength() - 1);            
         }
 
@@ -44,8 +47,11 @@ namespace Cars {
             };
 
             //Console.WriteLine("Press ESC to Exit");
-            Road.draw();
-            
+            road.leftSide = 2;
+            road.draw();
+
+            app.PrintScore();
+
             car.draw();
 
             var taskKeys = new Task(app.controlledCarRoutine);
@@ -70,17 +76,20 @@ namespace Cars {
                     PrintMsg("Game over");
                     return;
                 }
+
+                PrintScore();
                 oncCar.Speed -= 15;
                 Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
         }
 
-        private static void PrintMsg(string msg) {
+        private void PrintMsg(string msg) {
             Console.Beep();
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.White;
 
-            int leftOffset = 5, topOffset = 19;
+            int leftOffset = (wndWidth / 2 - msg.Length / 2) - 1;
+            int topOffset = 19;
 
             //paint background for message
             for (int r = 0; r < 3; r++) {
@@ -95,9 +104,14 @@ namespace Cars {
             Console.BackgroundColor = ConsoleColor.Black;
         }
 
+        private void PrintScore() {
+            Console.SetCursorPosition(29, 5);
+            Console.WriteLine("You score: {0}", score++);
+        }
+
         private bool moveDownOncomingCar(ref OncomingCar oncomingCar) {
             //на край дороги выезжать не будем, поэтому leftSide + 1
-            int col = new Random().Next(Road.leftSide + 1, Road.rightSide - oncomingCar.getWidth() + 1);
+            int col = new Random().Next(road.leftSide + 1, road.rightSide - oncomingCar.getWidth() + 1);
 
             oncomingCar.setLeftTop(col, 0 - car.getLength()); //машинка за верхнем краем окна.
 
@@ -175,7 +189,7 @@ namespace Cars {
 
                         case ConsoleKey.LeftArrow:
                             //Console.WriteLine("LeftArrow was pressed");
-                            leftLimit = Road.leftSide + 1;
+                            leftLimit = road.leftSide + 1;
                             carLeft = car.getLeft();
                             if (--carLeft <= leftLimit) {
                                 carLeft = leftLimit;
@@ -186,7 +200,7 @@ namespace Cars {
 
                         case ConsoleKey.RightArrow:
                             //Console.WriteLine("RightArrow was pressed");
-                            rightLimit = Road.rightSide - car.getWidth();
+                            rightLimit = road.rightSide - car.getWidth();
                             carLeft = car.getLeft();
                             if (++carLeft >= rightLimit) {
                                 carLeft = rightLimit;
