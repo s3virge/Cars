@@ -66,13 +66,18 @@ namespace Cars {
             OncomingCar oncCar = new OncomingCar();
 
             for (; ; ) {
-                moveDownOncomingCar(ref oncCar);
+                if (!moveDownOncomingCar(ref oncCar)) {
+                    Console.Beep();
+                    Console.SetCursorPosition(7, 20);
+                    Console.WriteLine("Game over.");
+                    return;
+                }
                 oncCar.Speed -= 15;
                 Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
         }
 
-        private void moveDownOncomingCar(ref OncomingCar oncomingCar) {
+        private bool moveDownOncomingCar(ref OncomingCar oncomingCar) {
             //на край дороги выезжать не будем, поэтому leftSide + 1
             int col = new Random().Next(Road.leftSide + 1, Road.rightSide - oncomingCar.getWidth() + 1);
 
@@ -80,9 +85,43 @@ namespace Cars {
 
             for (; oncomingCar.getTop() < wndHeight;) {
                 oncomingCar.moveDown();
+
+                if (isCrush(ref oncomingCar, ref car))
+                    return false;
+                
                 Debug.WriteLine("moveDownOncomingCar(). oncomingCar.getTop() = {0}", oncomingCar.getTop());
             }
             Debug.WriteLine("moveDownOncomingCar() - loop is finished.");
+            return true;
+        }
+
+        private bool isCrush( ref OncomingCar oncomCar, ref ControlledCar controlCar) {            
+
+            int onCarLeft = oncomCar.getLeft();
+            int onCarTop = oncomCar.getTop();
+
+            int contCarLeft = controlCar.getLeft();
+            int contCarTop = controlCar.getTop();
+
+            int leftDiference = onCarLeft - contCarLeft;
+
+            if (leftDiference < 0)
+                leftDiference = -(leftDiference);
+
+            int topDiference = onCarTop - contCarTop;
+
+            if (topDiference < 0)
+                topDiference = -(topDiference);
+            
+            int carWidth = controlCar.getWidth();
+            int carLength = controlCar.getLength();
+
+            if (leftDiference <= carWidth && topDiference <= carLength) {
+                Debug.WriteLine("Cars were crushed");
+                return true;
+            }            
+           
+            return false;
         }
 
         private void controlledCarRoutine() {
