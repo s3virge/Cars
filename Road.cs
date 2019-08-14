@@ -43,8 +43,7 @@ namespace Cars {
         public void draw() {
 
             bool sign = true;
-            Console.ForegroundColor = ConsoleColor.White;
-
+            
             for (; ; ) {
                 drawSide(leftSide, sign);
                 drawSide(rightSide, sign);
@@ -65,6 +64,7 @@ namespace Cars {
 
             for (int h = 0; h < consoleWndHight; h++) {
                 lock (Program.lockObj) {
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.SetCursorPosition(roadSide, h);
 
                     if (sign) {

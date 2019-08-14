@@ -63,10 +63,6 @@ namespace Cars {
             Task.WaitAll(tasks);
         }
 
-        private void roadRoutine() {
-
-        }
-
         /// <summary>
         /// method starts in separated process and draws the oncomming car in new position
         /// </summary>
