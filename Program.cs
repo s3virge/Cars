@@ -72,6 +72,7 @@ namespace Cars {
 
             for (; ; ) {
                 if (!moveDownOncomingCar(ref oncCar)) {
+                    Thread.Sleep(700);
                     Print.Msg("Game over");
                     return;
                 }
@@ -178,6 +179,7 @@ namespace Cars {
 
             if (leftDifference < carWidth && topDifference <= carLength) {
                 Debug.WriteLine("Cars were crushed");
+                road.setFinish();
                 return true;
             }
 

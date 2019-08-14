@@ -12,6 +12,8 @@ namespace Cars {
         /// </summary>
         private int width { get; set; }
 
+        private static bool finish = false;
+
         /// <summary>
         /// Left side position of thе road
         /// </summary>
@@ -53,6 +55,9 @@ namespace Cars {
                 else
                     sign = true;
 
+                if (finish)
+                    return;
+
                 Thread.Sleep(200);
             }
         }
@@ -77,6 +82,10 @@ namespace Cars {
                     }
                 }
             }
+        }
+
+        public void setFinish() {
+            finish = true;
         }
     }
 }
