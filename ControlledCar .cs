@@ -19,63 +19,72 @@ namespace Cars {
         }
 
         public override void draw() {
+            lock (Program.lockObj) {
+                Console.SetCursorPosition(left, top);
+                Console.ForegroundColor = bodyColor;
 
-            Console.SetCursorPosition(left, top);
-            Console.ForegroundColor = bodyColor;
+                int elem = top;
 
-            int elem = top;
-
-            byte i, j;
-            /* output each array element's value */
-            for (i = 0; i < length; i++) {
-                for (j = 0; j < width; j++) {
-                    char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i, j] })[0];
-                    Console.Write(c);
-                }
-                try {
-                    Console.SetCursorPosition(left, ++elem);
-                }
-                catch (ArgumentOutOfRangeException aor) {
-                    Console.SetCursorPosition(0, 0);
-                    Console.WriteLine(aor.Message);
-                    break;
+                byte i, j;
+                /* output each array element's value */
+                for (i = 0; i < length; i++) {
+                    for (j = 0; j < width; j++) {
+                        char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i, j] })[0];
+                        Console.Write(c);
+                    }
+                    try {
+                        Console.SetCursorPosition(left, ++elem);
+                    }
+                    catch (ArgumentOutOfRangeException aor) {
+                        Console.SetCursorPosition(0, 0);
+                        Console.WriteLine(aor.Message);
+                        break;
+                    }
                 }
             }
         }
 
 
         public void wipeBehind() {
-            //wipe behinde the car from lelt to right
-            for (int l = 0; l < width; l++) {
-                Console.SetCursorPosition(left + l, top + length);
-                Console.Write(" ");
+            lock (Program.lockObj) {
+                //wipe behinde the car from lelt to right
+                for (int l = 0; l < width; l++) {
+                    Console.SetCursorPosition(left + l, top + length);
+                    Console.Write(" ");
+                }
             }
         }
 
 
         public void wipeBefore() {
-            //wipe befor the car from lelt to right
-            for (int pos = 0; pos < width; pos++) {
-                Console.SetCursorPosition(left + pos, top - 1);
-                Console.Write(" ");
+            lock (Program.lockObj) {
+                //wipe befor the car from lelt to right
+                for (int pos = 0; pos < width; pos++) {
+                    Console.SetCursorPosition(left + pos, top - 1);
+                    Console.Write(" ");
+                }
             }
         }
 
 
         public void wipeLeft() {
-            //wipe befor the car from lelt to right
-            for (int pos = 0; pos < length; pos++) {
-                Console.SetCursorPosition(left - 1, top + pos);
-                Console.Write(" ");
+            lock (Program.lockObj) {
+                //wipe befor the car from lelt to right
+                for (int pos = 0; pos < length; pos++) {
+                    Console.SetCursorPosition(left - 1, top + pos);
+                    Console.Write(" ");
+                }
             }
         }
 
 
         public void wipeRight() {
-            //wipe befor the car from lelt to right
-            for (int pos = 0; pos < length; pos++) {
-                Console.SetCursorPosition(left + width, top + pos);
-                Console.Write(" ");
+            lock (Program.lockObj) {
+                //wipe befor the car from lelt to right
+                for (int pos = 0; pos < length; pos++) {
+                    Console.SetCursorPosition(left + width, top + pos);
+                    Console.Write(" ");
+                }
             }
         }
     }

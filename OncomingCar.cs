@@ -21,49 +21,50 @@ namespace Cars {
         }
 
         public override void draw() {
+            lock (Program.lockObj) {
+                Console.ForegroundColor = bodyColor;
+                //car draws from top to bootom
 
-            Console.ForegroundColor = bodyColor;
-            //car draws from top to bootom
+                int topCursorPos = top;
 
-            int topCursorPos = top;
+                //установить курсор за край окна нельзя
+                if (top < 0)
+                    topCursorPos = 0;
 
-            //установить курсор за край окна нельзя
-            if (top < 0)
-                topCursorPos = 0;
-
-            //wipe car when she touched the bootom 
-            if (top >= Console.WindowHeight) {
-                return;
-            }
-
-            Console.SetCursorPosition(left, topCursorPos);
-            //----------------------------------------------
-
-            //если спрайт машинки за верхним краем экрана
-            //то вычислить сколько частей корпуса машинки уже показалось из-за верхнего края окна
-            int shownCarPiece = length;
-            if (top < 0)
-                shownCarPiece = top + length;
-
-            if (shownCarPiece == 0)
-                shownCarPiece = -(top);
-
-            byte i, j;
-            /* output each array element's value */
-            i = (byte)(length - shownCarPiece);
-
-            for (; i < length; i++) {
-                for (j = 0; j < width; j++) {
-                    char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i, j] })[0];
-                    Console.Write(c);
+                //wipe car when she touched the bootom 
+                if (top >= Console.WindowHeight) {
+                    return;
                 }
 
-                try {
-                    Console.SetCursorPosition(left, ++topCursorPos);
-                }
-                catch (ArgumentOutOfRangeException aorException) {
-                    Debug.WriteLine("draw() gen an exception - ", aorException.Message);
-                    break;
+                Console.SetCursorPosition(left, topCursorPos);
+                //----------------------------------------------
+
+                //если спрайт машинки за верхним краем экрана
+                //то вычислить сколько частей корпуса машинки уже показалось из-за верхнего края окна
+                int shownCarPiece = length;
+                if (top < 0)
+                    shownCarPiece = top + length;
+
+                if (shownCarPiece == 0)
+                    shownCarPiece = -(top);
+
+                byte i, j;
+                /* output each array element's value */
+                i = (byte)(length - shownCarPiece);
+
+                for (; i < length; i++) {
+                    for (j = 0; j < width; j++) {
+                        char c = Encoding.GetEncoding(437).GetChars(new byte[] { shape[i, j] })[0];
+                        Console.Write(c);
+                    }
+
+                    try {
+                        Console.SetCursorPosition(left, ++topCursorPos);
+                    }
+                    catch (ArgumentOutOfRangeException aorException) {
+                        Debug.WriteLine("draw() gen an exception - ", aorException.Message);
+                        break;
+                    }
                 }
             }
         }
@@ -85,9 +86,11 @@ namespace Cars {
         /// clean screen behide the  car
         /// </summary>
         private void cleanBehind() {
-            for (int el = 0; el < width; el++) {
-                Console.SetCursorPosition(left + el, top - 1);
-                Console.Write(" ");
+            lock (Program.lockObj) {
+                for (int el = 0; el < width; el++) {
+                    Console.SetCursorPosition(left + el, top - 1);
+                    Console.Write(" ");
+                }
             }
         }
     }

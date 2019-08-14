@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cars {
@@ -40,16 +41,41 @@ namespace Cars {
         /// draws the road
         /// </summary>
         public void draw() {
-            char roadBorder = '|';
-            int consoleWndHight = Console.WindowHeight;
-            for (int h = 0; h < consoleWndHight; h++) {
-                Console.SetCursorPosition(leftSide, h);
-                Console.Write(roadBorder);
+
+            bool sign = true;
+            Console.ForegroundColor = ConsoleColor.White;
+
+            for (; ; ) {
+                drawSide(leftSide, sign);
+                drawSide(rightSide, sign);
+
+                if (sign)
+                    sign = false;
+                else
+                    sign = true;
+
+                Thread.Sleep(200);
             }
+        }
+
+        private void drawSide(int roadSide, bool sign) {
+
+            int consoleWndHight = Console.WindowHeight;
+            char[] roadBorder = { '|', ' ' };
 
             for (int h = 0; h < consoleWndHight; h++) {
-                Console.SetCursorPosition(rightSide, h);
-                Console.Write(roadBorder);
+                lock (Program.lockObj) {
+                    Console.SetCursorPosition(roadSide, h);
+
+                    if (sign) {
+                        Console.Write(roadBorder[0]);
+                        sign = false;
+                    }
+                    else {
+                        Console.Write(roadBorder[1]);
+                        sign = true;
+                    }
+                }
             }
         }
     }

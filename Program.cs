@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Cars {
     class Program {
 
-        static object lockObj = new object();
+        public static object lockObj = new object();
 
         //static void Main(string[] args) {
         private static ControlledCar car;
@@ -28,6 +28,7 @@ namespace Cars {
             Console.CursorVisible = false;
 
             road = new Road();
+            road.leftSide = 2;
 
             car = new ControlledCar();
 
@@ -43,13 +44,14 @@ namespace Cars {
                 Environment.Exit(0);
             };
 
-            //Console.WriteLine("Press ESC to Exit");
-            road.leftSide = 2;
-            road.draw();
-
+            //Console.WriteLine("Press ESC to Exit");           
+            
             Print.Score(ref score);
 
             car.draw();
+
+            var taskRoad = new Task(road.draw);
+            taskRoad.Start();
 
             var taskKeys = new Task(app.controlledCarRoutine);
             taskKeys.Start();
@@ -57,8 +59,12 @@ namespace Cars {
             var taskOncomingCar = new Task(app.oncommingCarRoutine);
             taskOncomingCar.Start();
 
-            var tasks = new[] { taskKeys, taskOncomingCar };
+            var tasks = new[] { taskKeys, taskOncomingCar, taskRoad };
             Task.WaitAll(tasks);
+        }
+
+        private void roadRoutine() {
+
         }
 
         /// <summary>
@@ -76,7 +82,7 @@ namespace Cars {
 
                 Print.Score(ref score);
                 oncCar.Speed -= 15;
-                Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
+                //Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
         }
         private void controlledCarRoutine() {
@@ -84,7 +90,7 @@ namespace Cars {
             int carLeft, carTop, bottomLimit, leftLimit, rightLimit;
 
             while (!Console.KeyAvailable && key.Key != ConsoleKey.Escape) {
-
+                
                 key = Console.ReadKey(true);
 
                 switch (key.Key) {
