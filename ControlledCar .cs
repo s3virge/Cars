@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cars {
     class ControlledCar : Cars {
-               
+
         private static byte[,] shape = new byte[length, width] {
             { leftWing, hood, hood, hood, hood, hood, rightWing },
             { leftWheels, roof, roof, roof, roof, roof, rightWheels },
@@ -15,12 +15,13 @@ namespace Cars {
         };
 
         public ControlledCar() : base(0, 0) {
-            color = ConsoleColor.DarkGreen;
+            bodyColor = ConsoleColor.DarkGreen;
         }
 
         public override void draw() {
+
             Console.SetCursorPosition(left, top);
-            Console.ForegroundColor = color;
+            Console.ForegroundColor = bodyColor;
 
             int elem = top;
 
@@ -40,7 +41,8 @@ namespace Cars {
                     break;
                 }
             }
-        }      
+        }
+
 
         public void wipeBehind() {
             //wipe behinde the car from lelt to right
@@ -50,6 +52,7 @@ namespace Cars {
             }
         }
 
+
         public void wipeBefore() {
             //wipe befor the car from lelt to right
             for (int pos = 0; pos < width; pos++) {
@@ -58,6 +61,7 @@ namespace Cars {
             }
         }
 
+
         public void wipeLeft() {
             //wipe befor the car from lelt to right
             for (int pos = 0; pos < length; pos++) {
@@ -65,6 +69,7 @@ namespace Cars {
                 Console.Write(" ");
             }
         }
+
 
         public void wipeRight() {
             //wipe befor the car from lelt to right

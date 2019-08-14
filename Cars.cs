@@ -6,7 +6,7 @@ namespace Cars {
         //where the cars will draws
         protected int left;
         protected int top;
-        protected ConsoleColor color;
+        protected ConsoleColor bodyColor;
 
         protected static byte leftWheels = 91;
         protected static byte rightWheels = 93;
@@ -25,7 +25,7 @@ namespace Cars {
             }
 
             set {
-                int maxSpeed = 45;
+                int maxSpeed = 40;
                 if (value > maxSpeed)
                     speed = value;
                 else 
@@ -44,7 +44,7 @@ namespace Cars {
         }
 
         public void setColor(ConsoleColor color) {
-            this.color = color;
+            bodyColor = color;
         }
 
 

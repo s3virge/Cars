@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace Cars {
     class Program {
+
+        static object lockObj = new object();
+
         //static void Main(string[] args) {
-        private static ControlledCar car;        
+        private static ControlledCar car;
         private int wndWidth, wndHeight;
         private static int score;
         private static Road road;
-
-        static object locker = new object();
 
         public Program() {
             wndWidth = 50;
@@ -31,13 +32,13 @@ namespace Cars {
             car = new ControlledCar();
 
             car.setLeft(road.rightSide - car.getWidth());
-            car.setTop(Console.WindowHeight - car.getLength() - 1);            
+            car.setTop(Console.WindowHeight - car.getLength() - 1);
         }
 
         /// //////////////////////////////////////////
         //todo controlled car must know about the road
         /// //////////////////////////////////////////
-        
+
         static void Main(string[] args) {
             Program app = new Program();
 
@@ -50,7 +51,7 @@ namespace Cars {
             road.leftSide = 2;
             road.draw();
 
-            app.PrintScore();
+            Print.Score(ref score);
 
             car.draw();
 
@@ -73,42 +74,16 @@ namespace Cars {
 
             for (; ; ) {
                 if (!moveDownOncomingCar(ref oncCar)) {
-                    PrintMsg("Game over");
+                    Print.Msg("Game over");
                     return;
                 }
 
-                PrintScore();
+                Print.Score(ref score);
                 oncCar.Speed -= 15;
                 Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
         }
-
-        private void PrintMsg(string msg) {
-            Console.Beep();
-            Console.BackgroundColor = ConsoleColor.Red;
-            Console.ForegroundColor = ConsoleColor.White;
-
-            int leftOffset = (wndWidth / 2 - msg.Length / 2) - 1;
-            int topOffset = 19;
-
-            //paint background for message
-            for (int r = 0; r < 3; r++) {
-                for (int c = 0; c < msg.Length + 2; c++) {
-                    Console.SetCursorPosition(c + leftOffset, r + topOffset);
-                    Console.Write(' ');
-                }
-            }
-            Console.SetCursorPosition(leftOffset + 1, topOffset + 1);
-            Console.WriteLine(msg);
-
-            Console.BackgroundColor = ConsoleColor.Black;
-        }
-
-        private void PrintScore() {
-            Console.SetCursorPosition(29, 5);
-            Console.WriteLine("You score: {0}", score++);
-        }
-
+    
         private bool moveDownOncomingCar(ref OncomingCar oncomingCar) {
             //на край дороги выезжать не будем, поэтому leftSide + 1
             int col = new Random().Next(road.leftSide + 1, road.rightSide - oncomingCar.getWidth() + 1);
@@ -116,18 +91,20 @@ namespace Cars {
             oncomingCar.setLeftTop(col, 0 - car.getLength()); //машинка за верхнем краем окна.
 
             for (; oncomingCar.getTop() < wndHeight;) {
-                oncomingCar.moveDown();
+                //lock (lockObj) {
+                    oncomingCar.moveDown();
+                //}
 
                 if (isCrush(ref oncomingCar, ref car))
                     return false;
-                
+
                 Debug.WriteLine("moveDownOncomingCar(). oncomingCar.getTop() = {0}", oncomingCar.getTop());
             }
             Debug.WriteLine("moveDownOncomingCar() - loop is finished.");
             return true;
         }
 
-        private bool isCrush( ref OncomingCar oncomCar, ref ControlledCar controlCar) {            
+        private bool isCrush(ref OncomingCar oncomCar, ref ControlledCar controlCar) {
 
             int onCarLeft = oncomCar.getLeft();
             int onCarTop = oncomCar.getTop();
@@ -144,15 +121,15 @@ namespace Cars {
 
             if (topDifference < 0)
                 topDifference = -(topDifference);
-            
+
             int carWidth = controlCar.getWidth();
             int carLength = controlCar.getLength();
 
             if (leftDifference < carWidth && topDifference <= carLength) {
                 Debug.WriteLine("Cars were crushed");
                 return true;
-            }            
-           
+            }
+
             return false;
         }
 
@@ -164,9 +141,8 @@ namespace Cars {
 
                 key = Console.ReadKey(true);
 
-                lock (locker) {
+                //lock (lockObj) {
                     switch (key.Key) {
-
                         case ConsoleKey.UpArrow:
                             //Console.WriteLine("UpArrow was pressed");
                             carTop = car.getTop();
@@ -214,7 +190,7 @@ namespace Cars {
                     }
 
                     car.draw();
-                }
+                //}
             }
         }
     }

@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 namespace Cars {
     class OncomingCar : Cars {
 
-        static object locker = new object();
-
         private static byte[,] shape = new byte[length, width] {
             { leftWheels, hatch, hatch, hatch, hatch, hatch, rightWheels },
             { leftDoor, roof, roof, roof, roof, roof, rightDoor },
@@ -19,12 +17,12 @@ namespace Cars {
         };
 
         public OncomingCar() : base(0, 0 - length) {
-            color = ConsoleColor.Yellow;
+            bodyColor = ConsoleColor.Yellow;
         }
 
         public override void draw() {
 
-            Console.ForegroundColor = color;
+            Console.ForegroundColor = bodyColor;
             //car draws from top to bootom
 
             int topCursorPos = top;
@@ -73,13 +71,11 @@ namespace Cars {
         public void moveDown() {
             //не вытирать за машинкой пока она полностью не показалась.
             top++;
+            
+            draw();
 
-            lock (locker) {
-                draw();
-
-                if (top > 0) {
-                    cleanBehind();
-                }
+            if (top > 0) {
+                cleanBehind();
             }
 
             Thread.Sleep(Speed);
