@@ -17,19 +17,36 @@ namespace Cars {
         protected static byte rightWing = 92;
         protected static byte leftDoor = 0;
         protected static byte rightDoor = 0;
-               
+
+        int maxSpeed = 200;
+        int minTimeOut = 40;
+
+        //Задержка между перерисовкой
+        private int timeout;
+        public int redrawTimeOut {
+            get {
+                return timeout;
+            }
+
+            set {                
+                if (value > minTimeOut)
+                    timeout = value;
+                else 
+                    timeout = minTimeOut;                
+            }
+        }
+
         private int speed;
         public int Speed {
             get {
                 return speed;
             }
-
             set {
-                int maxSpeed = 40;
-                if (value > maxSpeed)
+               
+                if (value < maxSpeed)
                     speed = value;
-                else 
-                    speed = maxSpeed;                
+                else
+                    speed = maxSpeed;
             }
         }
 
@@ -40,7 +57,8 @@ namespace Cars {
         public Cars(int left, int top) {            
             this.left = left;
             this.top = top;
-            Speed = 200;            
+            redrawTimeOut = maxSpeed;
+            Speed = minTimeOut;
         }
 
         public void setColor(ConsoleColor color) {

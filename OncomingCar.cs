@@ -79,7 +79,7 @@ namespace Cars {
                 cleanBehind();
             }
 
-            Thread.Sleep(Speed);
+            Thread.Sleep(redrawTimeOut);
         }
 
         /// <summary>

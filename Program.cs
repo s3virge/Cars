@@ -13,14 +13,17 @@ namespace Cars {
 
         //static void Main(string[] args) {
         private static ControlledCar car;
+        private static OncomingCar oncCar;
         private int wndWidth, wndHeight;
         private static int score;
         private static Road road;
+        private int deltaSpeed;
 
         public Program() {
             wndWidth = 50;
             wndHeight = 40;
             score = 0;
+            deltaSpeed = 12;
 
             Console.SetWindowSize(wndWidth, wndHeight);
             Console.SetBufferSize(wndWidth, wndHeight);
@@ -31,6 +34,7 @@ namespace Cars {
             road.leftSide = 2;
 
             car = new ControlledCar();
+            oncCar = new OncomingCar();
 
             car.setLeft(road.rightSide - car.getWidth());
             car.setTop(Console.WindowHeight - car.getLength() - 1);
@@ -45,8 +49,9 @@ namespace Cars {
             };
 
             //Console.WriteLine("Press ESC to Exit");           
-            
+
             Print.Score(ref score);
+            Print.Speed(oncCar.Speed);
 
             car.draw();
 
@@ -68,17 +73,18 @@ namespace Cars {
         /// </summary>
         private void oncommingCarRoutine() {
             //гонять машинку по кругу с разными смещениями по left
-            OncomingCar oncCar = new OncomingCar();
-
+            
             for (; ; ) {
                 if (!moveDownOncomingCar(ref oncCar)) {
                     Thread.Sleep(700);
-                    Print.Msg("Game over");
+                    Print.GameOver();
                     return;
                 }
 
                 Print.Score(ref score);
-                oncCar.Speed -= 15;
+                oncCar.redrawTimeOut -= deltaSpeed;
+                oncCar.Speed += deltaSpeed;
+                Print.Speed(oncCar.Speed);
                 //Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
         }
@@ -87,7 +93,7 @@ namespace Cars {
             int carLeft, carTop, bottomLimit, leftLimit, rightLimit;
 
             while (!Console.KeyAvailable && key.Key != ConsoleKey.Escape) {
-                
+
                 key = Console.ReadKey(true);
 
                 switch (key.Key) {
