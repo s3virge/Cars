@@ -12,8 +12,8 @@ namespace Cars {
         public static object lockObj = new object();
 
         //static void Main(string[] args) {
-        private static ControlledCar car;
-        private static OncomingCar oncCar;
+        private static ControlledCar controledCar;
+        private static OncomingCar oncomingCar;
         private int wndWidth, wndHeight;
         private static int score;
         private static Road road;
@@ -33,14 +33,15 @@ namespace Cars {
             road = new Road();
             road.leftSide = 2;
 
-            car = new ControlledCar();
-            oncCar = new OncomingCar();
+            controledCar = new ControlledCar();
+            oncomingCar = new OncomingCar();
 
-            car.setLeft(road.rightSide - car.getWidth());
-            car.setTop(Console.WindowHeight - car.getLength() - 1);
+            controledCar.setLeft(road.rightSide - controledCar.getWidth());
+            controledCar.setTop(Console.WindowHeight - controledCar.getLength() - 1);
         }
 
         static void Main(string[] args) {
+
             Program app = new Program();
 
             Console.CancelKeyPress += (sender, e) => {
@@ -51,9 +52,9 @@ namespace Cars {
             //Console.WriteLine("Press ESC to Exit");           
 
             Print.Score(ref score);
-            Print.Speed(oncCar.Speed);
+            Print.Speed(oncomingCar.Speed);
 
-            car.draw();
+            controledCar.draw();
 
             var taskRoad = new Task(road.draw);
             taskRoad.Start();
@@ -61,7 +62,7 @@ namespace Cars {
             var taskKeys = new Task(app.controlledCarRoutine);
             taskKeys.Start();
 
-            var taskOncomingCar = new Task(app.oncommingCarRoutine);
+            var taskOncomingCar = new Task(app.oncomingCarRoutine);
             taskOncomingCar.Start();
 
             var tasks = new[] { taskKeys, taskOncomingCar, taskRoad };
@@ -71,20 +72,22 @@ namespace Cars {
         /// <summary>
         /// method starts in separated process and draws the oncomming car in new position
         /// </summary>
-        private void oncommingCarRoutine() {
+        private void oncomingCarRoutine() {
             //гонять машинку по кругу с разными смещениями по left
             
             for (; ; ) {
-                if (!moveDownOncomingCar(ref oncCar)) {
+                oncomingCar.RandomizeShape();
+
+                if (!moveDownOncomingCar(ref oncomingCar)) {
                     Thread.Sleep(700);
                     Print.GameOver();
                     return;
                 }
 
                 Print.Score(ref score);
-                oncCar.redrawTimeOut -= deltaSpeed;
-                oncCar.Speed += deltaSpeed;
-                Print.Speed(oncCar.Speed);
+                oncomingCar.redrawTimeOut -= deltaSpeed;
+                oncomingCar.Speed += deltaSpeed;
+                Print.Speed(oncomingCar.Speed);
                 //Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
         }
@@ -99,63 +102,63 @@ namespace Cars {
                 switch (key.Key) {
                     case ConsoleKey.UpArrow:
                         //Console.WriteLine("UpArrow was pressed");
-                        carTop = car.getTop();
+                        carTop = controledCar.getTop();
                         if (--carTop <= 0)
                             carTop = 0;
-                        car.setTop(carTop);
-                        car.wipeBehind();
+                        controledCar.setTop(carTop);
+                        controledCar.wipeBehind();
                         break;
 
                     case ConsoleKey.DownArrow:
                         //Console.WriteLine("DownArrow was pressed");
-                        bottomLimit = wndHeight - car.getLength() - 1;
-                        carTop = car.getTop();
+                        bottomLimit = wndHeight - controledCar.getLength() - 1;
+                        carTop = controledCar.getTop();
                         if (++carTop >= bottomLimit) {
                             carTop = bottomLimit;
                         }
-                        car.setTop(carTop);
-                        car.wipeBefore();
+                        controledCar.setTop(carTop);
+                        controledCar.wipeBefore();
                         break;
 
                     case ConsoleKey.LeftArrow:
                         //Console.WriteLine("LeftArrow was pressed");
                         leftLimit = road.leftSide + 1;
-                        carLeft = car.getLeft();
+                        carLeft = controledCar.getLeft();
                         if (--carLeft <= leftLimit) {
                             carLeft = leftLimit;
                         }
-                        car.setLeft(carLeft);
-                        car.wipeRight();
+                        controledCar.setLeft(carLeft);
+                        controledCar.wipeRight();
                         break;
 
                     case ConsoleKey.RightArrow:
                         //Console.WriteLine("RightArrow was pressed");
-                        rightLimit = road.rightSide - car.getWidth();
-                        carLeft = car.getLeft();
+                        rightLimit = road.rightSide - controledCar.getWidth();
+                        carLeft = controledCar.getLeft();
                         if (++carLeft >= rightLimit) {
                             carLeft = rightLimit;
                         }
-                        car.setLeft(carLeft);
-                        car.wipeLeft();
+                        controledCar.setLeft(carLeft);
+                        controledCar.wipeLeft();
                         break;
 
                     case ConsoleKey.Escape:
                         break;
                 }
 
-                car.draw();
+                controledCar.draw();
             }
         }
         private bool moveDownOncomingCar(ref OncomingCar oncomingCar) {
             //на край дороги выезжать не будем, поэтому leftSide + 1
             int col = new Random().Next(road.leftSide + 1, road.rightSide - oncomingCar.getWidth() + 1);
 
-            oncomingCar.setLeftTop(col, 0 - car.getLength()); //машинка за верхнем краем окна.
+            oncomingCar.setLeftTop(col, 0 - controledCar.getLength()); //машинка за верхнем краем окна.
 
             for (; oncomingCar.getTop() < wndHeight;) {
                 oncomingCar.moveDown();
 
-                if (isCrush(ref oncomingCar, ref car))
+                if (isCrush(ref oncomingCar, ref controledCar))
                     return false;
             }
 

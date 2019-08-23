@@ -18,6 +18,36 @@ namespace Cars {
         protected static byte leftDoor = 0;
         protected static byte rightDoor = 0;
 
+        protected static byte leftWheels1 = 199;
+        protected static byte rightWheels1 = 182;
+        protected static byte hood1 = 177;
+        protected static byte roof1 = 178;
+        protected static byte hatch1 = 177;
+        protected static byte leftWing1 = 190;
+        protected static byte rightWing1 = 212;
+        protected static byte leftDoor1 = 195;
+        protected static byte rightDoor1 = 180;
+
+        protected static byte leftWheels2 = 199;
+        protected static byte rightWheels2 = 182;
+        protected static byte hood2 = 178;
+        protected static byte roof2 = 206;
+        protected static byte hatch2 = 219;
+        protected static byte leftWing2 = 47;
+        protected static byte rightWing2 = 92;
+        protected static byte leftDoor2 = 0;
+        protected static byte rightDoor2 = 0;
+
+        protected static byte leftWheels3 = 73;
+        protected static byte rightWheels3 = 73;
+        protected static byte hood3 = 207;
+        protected static byte roof3 = 0;
+        protected static byte hatch3 = 176;
+        protected static byte leftWing3 = 47;
+        protected static byte rightWing3 = 92;
+        protected static byte leftDoor3 = 195;
+        protected static byte rightDoor3 = 180;
+
         int maxSpeed = 200;
         int minTimeOut = 40;
 

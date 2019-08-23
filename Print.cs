@@ -101,5 +101,34 @@ namespace Cars {
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }
+
+        public static void Codepage() {
+            // Задаем заголовок окна
+            Console.Title = "Кодировка 437: MS-DOS ASCII";
+
+            for (byte b = 0; b < byte.MaxValue; b++) {
+                char c = Encoding.GetEncoding(437).GetChars(new byte[] { b })[0];
+                switch (b) {
+                    case 8: // Backspace
+                    case 9: // Tab
+                    case 10: // Перевод строки
+                    case 13: // Возврат каретки
+                        c = '.';
+                        break;
+                }
+
+                Console.Write("{0:000} {1}   ", b, c);
+
+                // 7 это сигнал -- Console.Beep() работает также
+                if (b == 7) Console.Write(" ");
+
+                if ((b + 1) % 8 == 0)
+                    Console.WriteLine();
+            }
+            Console.WriteLine();
+
+            Console.ReadKey();
+        }
+
     }
 }
