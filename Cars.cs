@@ -48,10 +48,10 @@ namespace Cars {
         protected static byte leftDoor3 = 195;
         protected static byte rightDoor3 = 180;
 
-        int maxSpeed = 200;
-        int minTimeOut = 40;
+        int maxSpeed = 350;
+        int minTimeOut = 10;
 
-        //Задержка между перерисовкой
+        //redraw timeout
         private int timeout;
         public int redrawTimeOut {
             get {
@@ -71,8 +71,7 @@ namespace Cars {
             get {
                 return speed;
             }
-            set {
-               
+            set {               
                 if (value < maxSpeed)
                     speed = value;
                 else
@@ -87,8 +86,8 @@ namespace Cars {
         public Cars(int left, int top) {            
             this.left = left;
             this.top = top;
-            redrawTimeOut = maxSpeed;
-            Speed = minTimeOut;
+            redrawTimeOut = maxSpeed - 100;
+            Speed = minTimeOut + 50;
         }
 
         public void setColor(ConsoleColor color) {

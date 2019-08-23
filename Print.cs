@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 namespace Cars {
     class Print {
         public static void GameOver() {
+
+            Thread.Sleep(700);
+
             lock (Program.lockObj) {
                 string msg = "Game over";
                 
@@ -87,12 +90,12 @@ namespace Cars {
 
                 string msg = string.Format("Speed: {0}", speed);
 
-                for (int row = 0; row < 3; row++) {
-                    for (int col = 0; col < msg.Length + 2; col++) {
-                        Console.SetCursorPosition(col + offsetLeft, row + offsetTop);
-                        Console.WriteLine(' ');
-                    }
-                }
+                //for (int row = 0; row < 3; row++) {
+                //    for (int col = 0; col < msg.Length + 2; col++) {
+                //        Console.SetCursorPosition(col + offsetLeft, row + offsetTop);
+                //        Console.WriteLine(' ');
+                //    }
+                //}
 
                 Console.SetCursorPosition(offsetLeft + 1, offsetTop + 1);
                 Console.WriteLine(msg);

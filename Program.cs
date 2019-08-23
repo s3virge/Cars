@@ -79,7 +79,6 @@ namespace Cars {
                 oncomingCar.RandomizeShape();
 
                 if (!moveDownOncomingCar(ref oncomingCar)) {
-                    Thread.Sleep(700);
                     Print.GameOver();
                     return;
                 }
@@ -87,6 +86,12 @@ namespace Cars {
                 Print.Score(ref score);
                 oncomingCar.redrawTimeOut -= deltaSpeed;
                 oncomingCar.Speed += deltaSpeed;
+
+                if (oncomingCar.Speed >= 200) {
+                    if (deltaSpeed > 2)
+                        deltaSpeed--;
+                }
+
                 Print.Speed(oncomingCar.Speed);
                 //Debug.WriteLine("oncCar.Speed = {0}", oncCar.Speed);
             }
